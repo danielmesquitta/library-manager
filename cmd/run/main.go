@@ -129,7 +129,7 @@ func main() {
 		ListTopBorrowersByAuthor(3)
 	for _, topBorrower := range top3Borrowers {
 		fmt.Printf(
-			"The Top Borrower for the Author %s is %s\n",
+			"One of the Top Borrowers for the Author %s is %s\n",
 			topBorrower.AuthorName,
 			topBorrower.BorrowerName,
 		)

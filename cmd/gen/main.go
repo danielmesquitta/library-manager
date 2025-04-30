@@ -24,13 +24,13 @@ type TopBorrowerQuerier interface {
 	// 				PARTITION BY bo.author_id
 	// 				ORDER BY COUNT(*) DESC
 	// 			) AS rn
-	// 		FROM loan l
-	// 			JOIN book bo ON l.book_id = bo.id
+	// 		FROM loans l
+	// 			JOIN books bo ON l.book_id = bo.id
 	// 		GROUP BY bo.author_id,
 	// 			l.borrower_id
 	// 	) AS sub
-	// 	JOIN author a ON a.id = sub.author_id
-	// 	JOIN borrower br ON br.id = sub.borrower_id
+	// 	JOIN authors a ON a.id = sub.author_id
+	// 	JOIN borrowers br ON br.id = sub.borrower_id
 	// WHERE sub.rn <= @limit;
 	ListTopBorrowersByAuthor(limit int) ([]gen.T, error)
 }

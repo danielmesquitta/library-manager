@@ -134,13 +134,13 @@ type topBorrowerDo struct{ gen.DO }
 //				PARTITION BY bo.author_id
 //				ORDER BY COUNT(*) DESC
 //			) AS rn
-//		FROM loan l
-//			JOIN book bo ON l.book_id = bo.id
+//		FROM loans l
+//			JOIN books bo ON l.book_id = bo.id
 //		GROUP BY bo.author_id,
 //			l.borrower_id
 //	) AS sub
-//	JOIN author a ON a.id = sub.author_id
-//	JOIN borrower br ON br.id = sub.borrower_id
+//	JOIN authors a ON a.id = sub.author_id
+//	JOIN borrowers br ON br.id = sub.borrower_id
 //
 // WHERE sub.rn <= @limit;
 func (t topBorrowerDo) ListTopBorrowersByAuthor(limit int) (result []model.TopBorrower, err error) {
@@ -148,7 +148,7 @@ func (t topBorrowerDo) ListTopBorrowersByAuthor(limit int) (result []model.TopBo
 
 	var generateSQL strings.Builder
 	params = append(params, limit)
-	generateSQL.WriteString("SELECT sub.author_id, a.name AS author_name, sub.borrower_id, br.name AS borrower_name, sub.loan_count FROM ( SELECT bo.author_id, l.borrower_id, COUNT(*) AS loan_count, ROW_NUMBER() OVER ( PARTITION BY bo.author_id ORDER BY COUNT(*) DESC ) AS rn FROM loan l JOIN book bo ON l.book_id = bo.id GROUP BY bo.author_id, l.borrower_id ) AS sub JOIN author a ON a.id = sub.author_id JOIN borrower br ON br.id = sub.borrower_id WHERE sub.rn <= ?; ")
+	generateSQL.WriteString("SELECT sub.author_id, a.name AS author_name, sub.borrower_id, br.name AS borrower_name, sub.loan_count FROM ( SELECT bo.author_id, l.borrower_id, COUNT(*) AS loan_count, ROW_NUMBER() OVER ( PARTITION BY bo.author_id ORDER BY COUNT(*) DESC ) AS rn FROM loans l JOIN books bo ON l.book_id = bo.id GROUP BY bo.author_id, l.borrower_id ) AS sub JOIN authors a ON a.id = sub.author_id JOIN borrowers br ON br.id = sub.borrower_id WHERE sub.rn <= ?; ")
 
 	var executeSQL *gorm.DB
 	executeSQL = t.UnderlyingDB().Raw(generateSQL.String(), params...).Find(&result) // ignore_security_alert

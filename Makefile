@@ -18,5 +18,5 @@ generate:
 	@go run cmd/gen/main.go
 
 .PHONY: migrate
-generate:
+migrate:
 	@go run cmd/migrate/main.go
