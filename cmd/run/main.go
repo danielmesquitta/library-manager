@@ -37,7 +37,15 @@ func main() {
 		AuthorID: jk.ID,
 		Copies:   3,
 	}
-	if err := query.Book.WithContext(ctx).Create(hp1); err != nil {
+
+	hp2 := &model.Book{
+		ISBN:     "9780747532698",
+		Title:    "Harry Potter and the Goblet of Fire",
+		AuthorID: jk.ID,
+		Copies:   2,
+	}
+
+	if err := query.Book.WithContext(ctx).Create(hp1, hp2); err != nil {
 		log.Fatal(err)
 	}
 
@@ -105,8 +113,7 @@ func main() {
 	overdues, _ := query.
 		Loan.
 		WithContext(ctx).
-		Preload(query.Loan.Book).
-		Preload(query.Loan.Borrower).
+		Preload(query.Loan.Book, query.Loan.Borrower).
 		Where(
 			query.Loan.ReturnedAt.IsNull(),
 			query.Loan.DueDate.Lt(time.Now()),
