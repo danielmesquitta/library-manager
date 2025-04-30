@@ -7,7 +7,7 @@ import (
 	"gorm.io/gen"
 )
 
-type Querier interface {
+type TopBorrowerQuerier interface {
 	// ListTopBorrowersByAuthor returns the top borrowers for each author.
 	// The limit parameter specifies the maximum number of borrowers to return for each author.
 	//
@@ -60,7 +60,7 @@ func main() {
 	)
 
 	// Generate custom query methods
-	g.ApplyInterface(func(Querier) {}, model.TopBorrower{})
+	g.ApplyInterface(func(TopBorrowerQuerier) {}, model.TopBorrower{})
 
 	g.Execute()
 }
