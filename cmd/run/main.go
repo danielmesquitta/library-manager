@@ -124,4 +124,14 @@ func main() {
 		fmt.Printf("⚠️  %s is overdue for %s (due %s)\n",
 			l.Book.Title, l.Borrower.Name, l.DueDate.Format(time.DateOnly))
 	}
+
+	top3Borrowers, _ := query.TopBorrower.WithContext(ctx).
+		ListTopBorrowersByAuthor(3)
+	for _, topBorrower := range top3Borrowers {
+		fmt.Printf(
+			"The Top Borrower for the Author %s is %s\n",
+			topBorrower.AuthorName,
+			topBorrower.BorrowerName,
+		)
+	}
 }

@@ -16,11 +16,12 @@ import (
 )
 
 var (
-	Q        = new(Query)
-	Author   *author
-	Book     *book
-	Borrower *borrower
-	Loan     *loan
+	Q           = new(Query)
+	Author      *author
+	Book        *book
+	Borrower    *borrower
+	Loan        *loan
+	TopBorrower *topBorrower
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -29,36 +30,40 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	Book = &Q.Book
 	Borrower = &Q.Borrower
 	Loan = &Q.Loan
+	TopBorrower = &Q.TopBorrower
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:       db,
-		Author:   newAuthor(db, opts...),
-		Book:     newBook(db, opts...),
-		Borrower: newBorrower(db, opts...),
-		Loan:     newLoan(db, opts...),
+		db:          db,
+		Author:      newAuthor(db, opts...),
+		Book:        newBook(db, opts...),
+		Borrower:    newBorrower(db, opts...),
+		Loan:        newLoan(db, opts...),
+		TopBorrower: newTopBorrower(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Author   author
-	Book     book
-	Borrower borrower
-	Loan     loan
+	Author      author
+	Book        book
+	Borrower    borrower
+	Loan        loan
+	TopBorrower topBorrower
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:       db,
-		Author:   q.Author.clone(db),
-		Book:     q.Book.clone(db),
-		Borrower: q.Borrower.clone(db),
-		Loan:     q.Loan.clone(db),
+		db:          db,
+		Author:      q.Author.clone(db),
+		Book:        q.Book.clone(db),
+		Borrower:    q.Borrower.clone(db),
+		Loan:        q.Loan.clone(db),
+		TopBorrower: q.TopBorrower.clone(db),
 	}
 }
 
@@ -72,27 +77,30 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:       db,
-		Author:   q.Author.replaceDB(db),
-		Book:     q.Book.replaceDB(db),
-		Borrower: q.Borrower.replaceDB(db),
-		Loan:     q.Loan.replaceDB(db),
+		db:          db,
+		Author:      q.Author.replaceDB(db),
+		Book:        q.Book.replaceDB(db),
+		Borrower:    q.Borrower.replaceDB(db),
+		Loan:        q.Loan.replaceDB(db),
+		TopBorrower: q.TopBorrower.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Author   *authorDo
-	Book     *bookDo
-	Borrower *borrowerDo
-	Loan     *loanDo
+	Author      *authorDo
+	Book        *bookDo
+	Borrower    *borrowerDo
+	Loan        *loanDo
+	TopBorrower *topBorrowerDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Author:   q.Author.WithContext(ctx),
-		Book:     q.Book.WithContext(ctx),
-		Borrower: q.Borrower.WithContext(ctx),
-		Loan:     q.Loan.WithContext(ctx),
+		Author:      q.Author.WithContext(ctx),
+		Book:        q.Book.WithContext(ctx),
+		Borrower:    q.Borrower.WithContext(ctx),
+		Loan:        q.Loan.WithContext(ctx),
+		TopBorrower: q.TopBorrower.WithContext(ctx),
 	}
 }
 
