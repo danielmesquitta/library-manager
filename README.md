@@ -1,6 +1,6 @@
 # Library Manager (GORM + Gen)
 
-A minimal scaffold for a **Library Manager** project built with Go, [GORM](https://gorm.io) and [gorm.io/gen](https://gorm.io/gen).
+A minimal scaffold for a **Library Manager** project built with Go, [GORM](https://gorm.io) and [gorm.io/gen](https://gorm.io/gen) to test type-safe SQL queries using GORM.
 
 ## Requirements
 
