@@ -27,7 +27,7 @@ env "gorm" {
   src = data.external_schema.gorm.url
   dev = local.envmap["DATABASE_URL"]
   migration {
-    dir = "file://migrations"
+    dir = "file://sql/migrations"
   }
   format {
     migrate {

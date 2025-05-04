@@ -11,7 +11,6 @@ define validate_args
 	fi;
 endef
 
-
 .PHONY: default
 default: run
 
@@ -39,16 +38,16 @@ create_migration:
 .PHONY: create_blank_migration
 create_blank_migration:
 	@$(validate_args)
-	@atlas migrate new $(ARGS) --env gorm --dir file://$(migrations_dir)
+	@atlas migrate new $(ARGS) --env gorm
 
 .PHONY: migrate
 migrate:
-	@atlas migrate apply --env gorm --dir file://$(migrations_dir) --url $(DATABASE_URL)
+	@atlas migrate apply --env gorm --url $(DATABASE_URL)
 
 .PHONY: migrate_down
 migrate_down:
 	@$(validate_args)
-	@atlas migrate down --env gorm --dir file://$(migrations_dir) --url $(DATABASE_URL) --to-version $(ARGS)
+	@atlas migrate down --env gorm --url $(DATABASE_URL) --to-version $(ARGS)
 
 %::
 	@true
