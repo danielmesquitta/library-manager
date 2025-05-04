@@ -58,3 +58,14 @@ make run
 ├── README.md
 └── tools.go          # Tools for generating code
 ```
+
+## Makefile commands
+
+- `make install` - Download Go module dependencies
+- `make update` - Update Go modules and tidy dependencies
+- `make run` - Run the application
+- `make generate` - Generate type-safe query code using gorm.io/gen
+- `make create_migration <name>` - Create a new migration with the specified name
+- `make create_blank_migration <name>` - Create a blank migration with the specified name
+- `make migrate` - Apply all pending migrations
+- `make migrate_down <version>` - Roll back migrations to the specified version

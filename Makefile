@@ -1,6 +1,16 @@
 include .env
 
+CMD := $(firstword $(MAKECMDGOALS))
 ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+migrations_dir := sql/migrations
+
+define validate_args
+  if [ -z "$(ARGS)" ]; then \
+	  echo "✗ missing args, usage: make $(CMD) <ARGS>"; \
+	  exit 1; \
+	fi;
+endef
+
 
 .PHONY: default
 default: run
@@ -23,11 +33,22 @@ generate:
 
 .PHONY: create_migration
 create_migration:
-	@atlas migrate diff $(ARGS) --env gorm --dir file://sql/migrations
+	@$(validate_args)
+	@atlas migrate diff $(ARGS) --env gorm --dir file://$(migrations_dir)
+
+.PHONY: create_blank_migration
+create_blank_migration:
+	@$(validate_args)
+	@atlas migrate new $(ARGS) --env gorm --dir file://$(migrations_dir)
 
 .PHONY: migrate
 migrate:
-	@atlas migrate apply --env gorm --dir file://sql/migrations --url $(DATABASE_URL)
+	@atlas migrate apply --env gorm --dir file://$(migrations_dir) --url $(DATABASE_URL)
+
+.PHONY: migrate_down
+migrate_down:
+	@$(validate_args)
+	@atlas migrate down --env gorm --dir file://$(migrations_dir) --url $(DATABASE_URL) --to-version $(ARGS)
 
 %::
 	@true
