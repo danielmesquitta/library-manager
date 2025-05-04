@@ -1,14 +1,14 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Book struct {
-    ID        uint      `gorm:"primaryKey"`
-    ISBN      string    `gorm:"uniqueIndex;size:13;not null"`
-    Title     string    `gorm:"size:255;not null"`
-    AuthorID  uint
-    Author    Author
-    Copies    uint      `gorm:"default:1"`
-    CreatedAt time.Time
-    UpdatedAt time.Time
+	gorm.Model
+	ISBN     string `gorm:"uniqueIndex;size:13;not null" json:"isbn,omitempty"`
+	Title    string `gorm:"size:255;not null"            json:"title,omitempty"`
+	AuthorID uint   `gorm:"not null"                     json:"author_id,omitempty"`
+	Author   Author `                                    json:"author,omitempty"`
+	Copies   uint   `gorm:"default:1;not null"           json:"copies,omitempty"`
 }

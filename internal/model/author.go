@@ -1,11 +1,11 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Author struct {
-    ID        uint      `gorm:"primaryKey"`
-    Name      string    `gorm:"size:255;not null"`
-    Books     []Book
-    CreatedAt time.Time
-    UpdatedAt time.Time
+	gorm.Model
+	Name  string `gorm:"size:255;not null" json:"name,omitempty"`
+	Books []Book `                         json:"books,omitempty"`
 }
