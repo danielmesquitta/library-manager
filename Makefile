@@ -32,7 +32,7 @@ generate:
 .PHONY: create_migration
 create_migration:
 	@$(validate_args)
-	@atlas migrate diff $(ARGS) --env gorm --dir file://$(migrations_dir)
+	@atlas migrate diff $(ARGS) --env gorm
 
 .PHONY: create_blank_migration
 create_blank_migration:
