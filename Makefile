@@ -2,7 +2,6 @@ include .env
 
 CMD := $(firstword $(MAKECMDGOALS))
 ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
-migrations_dir := sql/migrations
 
 define validate_args
   if [ -z "$(ARGS)" ]; then \
