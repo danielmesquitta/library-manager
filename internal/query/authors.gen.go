@@ -27,10 +27,11 @@ func newAuthor(db *gorm.DB, opts ...gen.DOOption) author {
 
 	tableName := _author.authorDo.TableName()
 	_author.ALL = field.NewAsterisk(tableName)
-	_author.ID = field.NewUint(tableName, "id")
+	_author.ID = field.NewField(tableName, "id")
 	_author.Name = field.NewString(tableName, "name")
 	_author.CreatedAt = field.NewTime(tableName, "created_at")
 	_author.UpdatedAt = field.NewTime(tableName, "updated_at")
+	_author.DeletedAt = field.NewField(tableName, "deleted_at")
 	_author.Books = authorHasManyBooks{
 		db: db.Session(&gorm.Session{}),
 
@@ -59,10 +60,11 @@ type author struct {
 	authorDo authorDo
 
 	ALL       field.Asterisk
-	ID        field.Uint
+	ID        field.Field
 	Name      field.String
 	CreatedAt field.Time
 	UpdatedAt field.Time
+	DeletedAt field.Field
 	Books     authorHasManyBooks
 
 	fieldMap map[string]field.Expr
@@ -80,10 +82,11 @@ func (a author) As(alias string) *author {
 
 func (a *author) updateTableName(table string) *author {
 	a.ALL = field.NewAsterisk(table)
-	a.ID = field.NewUint(table, "id")
+	a.ID = field.NewField(table, "id")
 	a.Name = field.NewString(table, "name")
 	a.CreatedAt = field.NewTime(table, "created_at")
 	a.UpdatedAt = field.NewTime(table, "updated_at")
+	a.DeletedAt = field.NewField(table, "deleted_at")
 
 	a.fillFieldMap()
 
@@ -108,11 +111,12 @@ func (a *author) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *author) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 5)
+	a.fieldMap = make(map[string]field.Expr, 6)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["created_at"] = a.CreatedAt
 	a.fieldMap["updated_at"] = a.UpdatedAt
+	a.fieldMap["deleted_at"] = a.DeletedAt
 
 }
 

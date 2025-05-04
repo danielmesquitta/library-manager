@@ -27,13 +27,14 @@ func newLoan(db *gorm.DB, opts ...gen.DOOption) loan {
 
 	tableName := _loan.loanDo.TableName()
 	_loan.ALL = field.NewAsterisk(tableName)
-	_loan.ID = field.NewUint(tableName, "id")
-	_loan.BookID = field.NewUint(tableName, "book_id")
-	_loan.BorrowerID = field.NewUint(tableName, "borrower_id")
+	_loan.ID = field.NewField(tableName, "id")
+	_loan.BookID = field.NewField(tableName, "book_id")
+	_loan.BorrowerID = field.NewField(tableName, "borrower_id")
 	_loan.DueDate = field.NewTime(tableName, "due_date")
 	_loan.ReturnedAt = field.NewTime(tableName, "returned_at")
 	_loan.CreatedAt = field.NewTime(tableName, "created_at")
 	_loan.UpdatedAt = field.NewTime(tableName, "updated_at")
+	_loan.DeletedAt = field.NewField(tableName, "deleted_at")
 	_loan.Book = loanBelongsToBook{
 		db: db.Session(&gorm.Session{}),
 
@@ -89,13 +90,14 @@ type loan struct {
 	loanDo loanDo
 
 	ALL        field.Asterisk
-	ID         field.Uint
-	BookID     field.Uint
-	BorrowerID field.Uint
+	ID         field.Field
+	BookID     field.Field
+	BorrowerID field.Field
 	DueDate    field.Time
 	ReturnedAt field.Time
 	CreatedAt  field.Time
 	UpdatedAt  field.Time
+	DeletedAt  field.Field
 	Book       loanBelongsToBook
 
 	Borrower loanBelongsToBorrower
@@ -115,13 +117,14 @@ func (l loan) As(alias string) *loan {
 
 func (l *loan) updateTableName(table string) *loan {
 	l.ALL = field.NewAsterisk(table)
-	l.ID = field.NewUint(table, "id")
-	l.BookID = field.NewUint(table, "book_id")
-	l.BorrowerID = field.NewUint(table, "borrower_id")
+	l.ID = field.NewField(table, "id")
+	l.BookID = field.NewField(table, "book_id")
+	l.BorrowerID = field.NewField(table, "borrower_id")
 	l.DueDate = field.NewTime(table, "due_date")
 	l.ReturnedAt = field.NewTime(table, "returned_at")
 	l.CreatedAt = field.NewTime(table, "created_at")
 	l.UpdatedAt = field.NewTime(table, "updated_at")
+	l.DeletedAt = field.NewField(table, "deleted_at")
 
 	l.fillFieldMap()
 
@@ -146,7 +149,7 @@ func (l *loan) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (l *loan) fillFieldMap() {
-	l.fieldMap = make(map[string]field.Expr, 9)
+	l.fieldMap = make(map[string]field.Expr, 10)
 	l.fieldMap["id"] = l.ID
 	l.fieldMap["book_id"] = l.BookID
 	l.fieldMap["borrower_id"] = l.BorrowerID
@@ -154,6 +157,7 @@ func (l *loan) fillFieldMap() {
 	l.fieldMap["returned_at"] = l.ReturnedAt
 	l.fieldMap["created_at"] = l.CreatedAt
 	l.fieldMap["updated_at"] = l.UpdatedAt
+	l.fieldMap["deleted_at"] = l.DeletedAt
 
 }
 
