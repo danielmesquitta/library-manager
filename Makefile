@@ -1,3 +1,15 @@
+include .env
+
+CMD := $(firstword $(MAKECMDGOALS))
+ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
+define validate_args
+  if [ -z "$(ARGS)" ]; then \
+	  echo "✗ missing args, usage: make $(CMD) <ARGS>"; \
+	  exit 1; \
+	fi;
+endef
+
 .PHONY: default
 default: run
 
@@ -17,6 +29,24 @@ run:
 generate:
 	@go run cmd/gen/main.go
 
+.PHONY: create_migration
+create_migration:
+	@$(validate_args)
+	@atlas migrate diff $(ARGS) --env gorm
+
+.PHONY: create_blank_migration
+create_blank_migration:
+	@$(validate_args)
+	@atlas migrate new $(ARGS) --env gorm
+
 .PHONY: migrate
 migrate:
-	@go run cmd/migrate/main.go
+	@atlas migrate apply --env gorm --url $(DATABASE_URL)
+
+.PHONY: migrate_down
+migrate_down:
+	@$(validate_args)
+	@atlas migrate down --env gorm --url $(DATABASE_URL) --to-version $(ARGS)
+
+%::
+	@true
