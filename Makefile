@@ -1,3 +1,7 @@
+include .env
+
+ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+
 .PHONY: default
 default: run
 
@@ -17,6 +21,13 @@ run:
 generate:
 	@go run cmd/gen/main.go
 
+.PHONY: create_migration
+create_migration:
+	@atlas migrate diff $(ARGS) --env gorm --dir file://sql/migrations
+
 .PHONY: migrate
 migrate:
-	@go run cmd/migrate/main.go
+	@atlas migrate apply --env gorm --dir file://sql/migrations --url $(DATABASE_URL)
+
+%::
+	@true

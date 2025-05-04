@@ -12,9 +12,9 @@ import (
 )
 
 func Connect() (*gorm.DB, error) {
-	dsn := os.Getenv("DATABASE_DSN")
+	dsn := os.Getenv("DATABASE_URL")
 	if dsn == "" {
-		return nil, fmt.Errorf("DATABASE_DSN is not set")
+		return nil, fmt.Errorf("DATABASE_URL is not set")
 	}
 
 	newLogger := logger.New(
