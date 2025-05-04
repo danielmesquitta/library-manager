@@ -1,12 +1,12 @@
 package model
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Borrower struct {
-    ID        uint      `gorm:"primaryKey"`
-    Name      string    `gorm:"size:255;not null"`
-    Email     string    `gorm:"size:255;uniqueIndex"`
-    Loans     []Loan
-    CreatedAt time.Time
-    UpdatedAt time.Time
+	gorm.Model
+	Name  string `gorm:"size:255;not null"    json:"name,omitempty"`
+	Email string `gorm:"size:255;uniqueIndex" json:"email,omitempty"`
+	Loans []Loan `                            json:"loans,omitempty"`
 }
