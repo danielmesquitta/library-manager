@@ -27,13 +27,14 @@ func newBook(db *gorm.DB, opts ...gen.DOOption) book {
 
 	tableName := _book.bookDo.TableName()
 	_book.ALL = field.NewAsterisk(tableName)
-	_book.ID = field.NewUint(tableName, "id")
+	_book.ID = field.NewField(tableName, "id")
 	_book.ISBN = field.NewString(tableName, "isbn")
 	_book.Title = field.NewString(tableName, "title")
-	_book.AuthorID = field.NewUint(tableName, "author_id")
+	_book.AuthorID = field.NewField(tableName, "author_id")
 	_book.Copies = field.NewUint(tableName, "copies")
 	_book.CreatedAt = field.NewTime(tableName, "created_at")
 	_book.UpdatedAt = field.NewTime(tableName, "updated_at")
+	_book.DeletedAt = field.NewField(tableName, "deleted_at")
 	_book.Author = bookBelongsToAuthor{
 		db: db.Session(&gorm.Session{}),
 
@@ -62,13 +63,14 @@ type book struct {
 	bookDo bookDo
 
 	ALL       field.Asterisk
-	ID        field.Uint
+	ID        field.Field
 	ISBN      field.String
 	Title     field.String
-	AuthorID  field.Uint
+	AuthorID  field.Field
 	Copies    field.Uint
 	CreatedAt field.Time
 	UpdatedAt field.Time
+	DeletedAt field.Field
 	Author    bookBelongsToAuthor
 
 	fieldMap map[string]field.Expr
@@ -86,13 +88,14 @@ func (b book) As(alias string) *book {
 
 func (b *book) updateTableName(table string) *book {
 	b.ALL = field.NewAsterisk(table)
-	b.ID = field.NewUint(table, "id")
+	b.ID = field.NewField(table, "id")
 	b.ISBN = field.NewString(table, "isbn")
 	b.Title = field.NewString(table, "title")
-	b.AuthorID = field.NewUint(table, "author_id")
+	b.AuthorID = field.NewField(table, "author_id")
 	b.Copies = field.NewUint(table, "copies")
 	b.CreatedAt = field.NewTime(table, "created_at")
 	b.UpdatedAt = field.NewTime(table, "updated_at")
+	b.DeletedAt = field.NewField(table, "deleted_at")
 
 	b.fillFieldMap()
 
@@ -117,7 +120,7 @@ func (b *book) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (b *book) fillFieldMap() {
-	b.fieldMap = make(map[string]field.Expr, 8)
+	b.fieldMap = make(map[string]field.Expr, 9)
 	b.fieldMap["id"] = b.ID
 	b.fieldMap["isbn"] = b.ISBN
 	b.fieldMap["title"] = b.Title
@@ -125,6 +128,7 @@ func (b *book) fillFieldMap() {
 	b.fieldMap["copies"] = b.Copies
 	b.fieldMap["created_at"] = b.CreatedAt
 	b.fieldMap["updated_at"] = b.UpdatedAt
+	b.fieldMap["deleted_at"] = b.DeletedAt
 
 }
 

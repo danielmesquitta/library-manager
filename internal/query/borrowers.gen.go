@@ -27,11 +27,12 @@ func newBorrower(db *gorm.DB, opts ...gen.DOOption) borrower {
 
 	tableName := _borrower.borrowerDo.TableName()
 	_borrower.ALL = field.NewAsterisk(tableName)
-	_borrower.ID = field.NewUint(tableName, "id")
+	_borrower.ID = field.NewField(tableName, "id")
 	_borrower.Name = field.NewString(tableName, "name")
 	_borrower.Email = field.NewString(tableName, "email")
 	_borrower.CreatedAt = field.NewTime(tableName, "created_at")
 	_borrower.UpdatedAt = field.NewTime(tableName, "updated_at")
+	_borrower.DeletedAt = field.NewField(tableName, "deleted_at")
 	_borrower.Loans = borrowerHasManyLoans{
 		db: db.Session(&gorm.Session{}),
 
@@ -84,11 +85,12 @@ type borrower struct {
 	borrowerDo borrowerDo
 
 	ALL       field.Asterisk
-	ID        field.Uint
+	ID        field.Field
 	Name      field.String
 	Email     field.String
 	CreatedAt field.Time
 	UpdatedAt field.Time
+	DeletedAt field.Field
 	Loans     borrowerHasManyLoans
 
 	fieldMap map[string]field.Expr
@@ -106,11 +108,12 @@ func (b borrower) As(alias string) *borrower {
 
 func (b *borrower) updateTableName(table string) *borrower {
 	b.ALL = field.NewAsterisk(table)
-	b.ID = field.NewUint(table, "id")
+	b.ID = field.NewField(table, "id")
 	b.Name = field.NewString(table, "name")
 	b.Email = field.NewString(table, "email")
 	b.CreatedAt = field.NewTime(table, "created_at")
 	b.UpdatedAt = field.NewTime(table, "updated_at")
+	b.DeletedAt = field.NewField(table, "deleted_at")
 
 	b.fillFieldMap()
 
@@ -135,12 +138,13 @@ func (b *borrower) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (b *borrower) fillFieldMap() {
-	b.fieldMap = make(map[string]field.Expr, 6)
+	b.fieldMap = make(map[string]field.Expr, 7)
 	b.fieldMap["id"] = b.ID
 	b.fieldMap["name"] = b.Name
 	b.fieldMap["email"] = b.Email
 	b.fieldMap["created_at"] = b.CreatedAt
 	b.fieldMap["updated_at"] = b.UpdatedAt
+	b.fieldMap["deleted_at"] = b.DeletedAt
 
 }
 
