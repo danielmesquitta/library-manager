@@ -1,4 +1,4 @@
-# Library Manager (GORM + Gen)
+# Library Manager (GORM + Gen + Atlas)
 
 A minimal scaffold for a **Library Manager** project built with Go, [GORM](https://gorm.io) and [gorm.io/gen](https://gorm.io/gen) to showcase type-safe SQL queries using GORM and Migration management with [Atlas](https://atlasgo.dev/).
 
